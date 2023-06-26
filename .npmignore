@@ -1,0 +1,7 @@
+.github
+examples
+node_modules
+src
+test
+.travis.yml
+tsconfig.json
