@@ -1,4 +1,5 @@
 {
+    "exclude": ["tests"],
     "compilerOptions": {
         "outDir": "./dist",
         "module": "CommonJS",
@@ -7,5 +8,6 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "declaration": true,
+        "rootDir": "./src"
     }
 }

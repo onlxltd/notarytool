@@ -2,6 +2,6 @@
 examples
 node_modules
 src
-test
+tests
 .travis.yml
 tsconfig.json
