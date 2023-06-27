@@ -5,7 +5,6 @@
 NotaryTool is a TypeScript implimentation of Apple's notarization process.
 The tool can be used on any platform and on macOS will attempt to staple on completion.
 
-## Support
 NotaryTool is supported by [ON LX Limited](https://onlx.ltd/?src=notarytool). Check out our projects such as [Ctrl Suite](https://onlx.ltd/ctrl-suite?src=notarytool) and [bonjour-service](https://npmjs.com/package/bonjour-service).
 
 ## Installation
