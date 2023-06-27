@@ -1,6 +1,6 @@
 # NotaryTool
 
-[![build](https://github.com/onlxltd/notarytool/actions/workflows/build-release.yml/badge.svg?style=flat-square)](https://github.com/onlxltd/notarytool/actions/workflows/build-release.yml) ![npm bundle size](https://img.shields.io/bundlephobia/min/notarytool?style=flat-square) ![GitHub Release Date](https://img.shields.io/github/release-date/onlxltd/notarytool?style=flat-square) [![DeepScan grade](https://deepscan.io/api/teams/13435/projects/24967/branches/773213/badge/grade.svg?style=flat-square)](https://deepscan.io/dashboard#view=project&tid=13435&pid=24967&bid=773213)
+[![build](https://github.com/onlxltd/notarytool/actions/workflows/build-release.yml/badge.svg?style=flat-square)](https://github.com/onlxltd/notarytool/actions/workflows/build-release.yml) ![npm bundle size](https://img.shields.io/bundlephobia/min/notarytool?style=flat-square) [![DeepScan grade](https://deepscan.io/api/teams/13435/projects/24967/branches/773213/badge/grade.svg?style=flat-square)](https://deepscan.io/dashboard#view=project&tid=13435&pid=24967&bid=773213)
 
 NotaryTool is a TypeScript implimentation of Apple's notarization process.
 The tool can be used on any platform and on macOS will attempt to staple on completion.
