@@ -13,7 +13,7 @@ const main = async () => {
     })
 
     tool.on('progress', val => console.log('progress:', val))
-    tool.on('status', (status, message) => console.log('status:', status, message))
+    tool.on('status', (status, message) => console.log('status:', message))
 
     await tool.notarize(process.env.FILE_PATH)
 

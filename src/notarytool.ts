@@ -10,8 +10,14 @@ import FileHandler          from './lib/file-handler'
 import SubmissionStatus     from './types/submission-status'
 import RangeFormatter       from './lib/range-formatter'
 import Stapler              from './lib/stapler'
+import NotaryToolStatus     from './types/notary-tool-status'
 
-export default class NotaryTool extends EventEmitter {
+export declare interface NotaryTool {
+    on(event: 'progress', handler: (progress: number) => void): this;
+    on(event: 'status', handler: (status: NotaryToolStatus, message?: string) => void): this
+}
+
+export class NotaryTool extends EventEmitter {
 
     #_config        : NotaryToolConfig
     #_appStore      : AppStore
@@ -40,6 +46,10 @@ export default class NotaryTool extends EventEmitter {
      * @param filePath 
      */
     public async notarize(filePath: string) {
+        this.#_lastProgress     = undefined
+        this.#_isChecking       = false
+        if(this.#_check !== undefined) clearInterval(this.#_check)
+
         this.progress(0)
 
         let file    : Buffer    = await fs.readFile(filePath)
@@ -52,7 +62,7 @@ export default class NotaryTool extends EventEmitter {
          */
         let payload     : { submissionName: string, sha256: string } = { submissionName, sha256 }
         let request     = await this.#_appStore.post('/notary/v2/submissions', payload) as SubmissionRequest
-        this.progress(0.1, 'begin_upload')
+        this.progress(0.1, NotaryToolStatus.BeginUpload)
         
         /**
          * Upload the file to App Store
@@ -77,10 +87,10 @@ export default class NotaryTool extends EventEmitter {
                         if(this.#_check !== undefined) clearInterval(this.#_check)
                         let { data: { attributes: { developerLogUrl } } } = await this.#_appStore.get(`/notary/v2/submissions/${id}/logs`)
                         let { statusSummary, issues } = await this.#_appStore.download(developerLogUrl)
-                        this.progress(1, 'invalid', issues)
-                        reject(new Error(statusSummary))
+                        this.progress(1, NotaryToolStatus.Invalid, issues)
+                        return reject(new Error(statusSummary))
                     default:
-                        this.progress(0.75, 'in_progress', 'This may take some time...')
+                        this.progress(0.75, NotaryToolStatus.InProgress, 'This may take some time...')
                         // Continue to check
                         break
                 }
@@ -90,21 +100,21 @@ export default class NotaryTool extends EventEmitter {
     }
 
     private async handleStaple(filePath: string) {
-        if(this.#_config.ignoreStaple === true || platform() != 'darwin') return this.progress(1, 'complete')
+        if(this.#_config.ignoreStaple === true || platform() != 'darwin') return this.progress(1, NotaryToolStatus.Complete)
         let staple = new Stapler(filePath)
         staple.on('data', data => this.progress(0.9, data))
         await staple.run()
-        this.progress(1, 'complete')
+        this.progress(1, NotaryToolStatus.Complete)
     }
 
     private async handleUpload(filePath: string, receipt: SubmissionRequest) {
         let handler = new FileHandler(filePath, receipt)
         handler.on('progress', (val) => this.progress(RangeFormatter.calc(val)))
         await handler.upload()
-        this.progress(0.7, 'uploaded')
+        this.progress(0.7, NotaryToolStatus.Uploaded)
     }
 
-    private progress(val: number, status: string | undefined = undefined, message: string | undefined = undefined) {
+    private progress(val: number, status: NotaryToolStatus | undefined = undefined, message: string | undefined = undefined) {
         if(this.#_lastProgress === undefined || val > this.#_lastProgress) {
             this.emit('progress', val)
             this.#_lastProgress = val
@@ -113,3 +123,6 @@ export default class NotaryTool extends EventEmitter {
     }
 
 }
+
+export { NotaryToolStatus, NotaryToolConfig }
+export default NotaryTool

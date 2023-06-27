@@ -1,6 +1,5 @@
 import fs                   from 'fs/promises'
-import path                 from 'path'
-import jwt, { JwtPayload }                  from 'jsonwebtoken'
+import jwt, { JwtPayload }  from 'jsonwebtoken'
 import NotaryToolConfig     from '../types/notary-tool-config'
 
 export default class Token {
